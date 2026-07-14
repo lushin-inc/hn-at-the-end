@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Nation — Lost Deal Board</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F7FA;
+    --surface: #FFFFFF;
+    --surface-hover: #F9FBFD;
+    --border: #DDE3EC;
+    --text: #1A2B4A;
+    --text-muted: #647085;
+    --hn-navy: #1E4E8C;
+    --hn-navy-dark: #173F73;
+    --hn-red: #B71F2E;
+    --accent-close: #2F8A4C;
+    --stage-l1: #2B5EA7;
+    --stage-g1: #B71F2E;
+    --stage-g2: #C94A45;
+    --stage-lr: #3A5A8C;
+    --stage-sa: #2F8A4C;
+    --stage-fc: #6B7A99;
+    --card-radius: 14px;
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .header {
+    padding: 40px 40px 0;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    color: var(--hn-navy);
+  }
+
+  h1 span { color: var(--hn-red); }
+
+  .header-rule {
+    height: 4px;
+    width: 64px;
+    background: var(--hn-red);
+    border-radius: 2px;
+    margin: 14px 0 20px;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .count-pill {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--hn-navy);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 7px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-close);
+    animation: pulse 1.6s ease infinite;
+  }
+
+  .live-dot.stale { background: var(--text-muted); animation: none; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  .mini-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .mini-btn:hover { background: var(--surface-hover); color: var(--text); border-color: #C6CFDD; }
+
+  /* ── SHARE BOX (shown while empty) ── */
+  .share-box {
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 0 40px;
+  }
+
+  .share-inner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 28px 32px;
+    box-shadow: 0 1px 3px rgba(26,43,74,0.06);
+  }
+
+  .share-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .share-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+  .share-url {
+    flex: 1;
+    min-width: 260px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--hn-navy);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    word-break: break-all;
+    cursor: text;
+    user-select: all;
+  }
+
+  .copy-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--hn-navy);
+    border: none;
+    border-radius: 10px;
+    padding: 13px 22px;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .copy-btn:hover { background: var(--hn-navy-dark); }
+
+  .share-hint { font-size: 12.5px; color: var(--text-muted); margin-top: 12px; }
+
+  /* ── TALLY STRIP ── */
+  .tally {
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 0 40px;
+    display: none;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tally.visible { display: flex; }
+
+  .tally-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px 6px 8px;
+  }
+
+  .tally-chip .tc-count {
+    min-width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: var(--hn-red);
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+  }
+
+  .tally-chip.stage-chip .tc-count { background: var(--tc-color); }
+
+  .tally-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    margin: 0 6px;
+  }
+
+  /* ── CARD GRID ── */
+  .grid {
+    max-width: 1400px;
+    margin: 20px auto 0;
+    padding: 0 40px 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 20px 22px;
+    transition: var(--transition);
+    box-shadow: 0 1px 3px rgba(26,43,74,0.06);
+    animation: panelIn 0.35s ease;
+  }
+
+  .card:hover { border-color: #C6CFDD; background: var(--surface-hover); }
+
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .card-name {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    color: var(--hn-navy);
+  }
+
+  .stage-badge {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+  }
+
+  .stage-badge .node-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.3px;
+    color: #fff;
+  }
+
+  .stage-badge .stage-name {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .card-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .card-deal {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .card-reason {
+    font-size: 13.5px;
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--hn-red);
+    background: rgba(183,31,46,0.06);
+    border-left: 3px solid var(--hn-red);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 12px;
+  }
+
+  .card-reason .other-note {
+    display: block;
+    color: var(--text);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  .empty-hint {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+    padding: 40px 0;
+  }
+
+  /* ── FIXED BUTTONS ── */
+  .manual-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(26,43,74,0.1);
+  }
+  .manual-btn:hover { background: var(--surface-hover); color: var(--text); }
+
+  /* ── MANUAL PANEL ── */
+  .manual-panel {
+    display: none;
+    position: fixed;
+    bottom: 70px;
+    right: 24px;
+    width: 340px;
+    max-width: calc(100vw - 48px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 18px 20px;
+    box-shadow: 0 8px 30px rgba(26,43,74,0.18);
+    z-index: 100;
+  }
+  .manual-panel.visible { display: block; }
+
+  .manual-panel .mp-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .manual-panel p { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.45; }
+
+  .manual-panel textarea {
+    width: 100%;
+    height: 80px;
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    resize: none;
+  }
+
+  .manual-panel .mp-add {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--hn-navy);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: var(--transition);
+  }
+  .manual-panel .mp-add:hover { background: var(--hn-navy-dark); }
+
+  .setup-err {
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 0 40px;
+    display: none;
+  }
+  .setup-err.visible { display: block; }
+  .setup-err .se-inner {
+    background: var(--surface);
+    border: 1px solid rgba(183,31,46,0.35);
+    border-radius: var(--card-radius);
+    padding: 20px 24px;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .setup-err strong { color: var(--hn-red); }
+
+  @media (max-width: 800px) {
+    .header, .share-box, .tally, .grid, .setup-err { padding-left: 20px; padding-right: 20px; }
+    h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Home Nation &middot; Lost Deal Debrief</div>
+  <div class="header-top">
+    <h1>What Happened <span>at the End?</span></h1>
+    <div class="header-meta">
+      <div class="count-pill"><div class="live-dot" id="liveDot"></div><span id="countText">0 responses</span></div>
+      <button class="mini-btn" onclick="copyFormLink()" id="copyMini">Copy form link</button>
+      <button class="mini-btn" onclick="newSession()">New session</button>
+    </div>
+  </div>
+  <div class="header-rule"></div>
+</div>
+
+<div class="setup-err" id="setupErr">
+  <div class="se-inner">
+    <strong>Couldn't start a live session.</strong> The board can still work — have everyone submit on the form page, then use <em>Add manually</em> (bottom right) to paste in their codes from the chat.
+    <br><br><button class="mini-btn" onclick="location.reload()">Try again</button>
+  </div>
+</div>
+
+<div class="share-box" id="shareBox" style="display:none;">
+  <div class="share-inner">
+    <div class="share-label">Send the team this link</div>
+    <div class="share-row">
+      <div class="share-url" id="shareUrl"></div>
+      <button class="copy-btn" onclick="copyFormLink()" id="copyBig">Copy link</button>
+    </div>
+    <div class="share-hint">Drop it in the sales chat. Cards show up here as each person submits &mdash; keep this page on your screen.</div>
+  </div>
+</div>
+
+<div class="tally" id="tally"></div>
+
+<div class="grid" id="grid"></div>
+
+<button class="manual-btn" onclick="toggleManual()">+ Add manually</button>
+
+<div class="manual-panel" id="manualPanel">
+  <div class="mp-title">Paste submission codes</div>
+  <p>If someone's submit failed, they got a code. Paste one or more (any spacing) and add them here.</p>
+  <textarea id="manualCodes" placeholder="Paste codes here"></textarea>
+  <button class="mp-add" onclick="ingestCodes()">Add to board</button>
+</div>
+
+<script>
+const STAGES = {
+  l1: { badge: "L1", name: "New Lead",             color: "var(--stage-l1)" },
+  g1: { badge: "G1", name: "Good Fit",             color: "var(--stage-g1)" },
+  g2: { badge: "G2", name: "Easy Form & Estimate", color: "var(--stage-g2)" },
+  lr: { badge: "LR", name: "Lender Review",        color: "var(--stage-lr)" },
+  sa: { badge: "SA", name: "Signed & Closing",     color: "var(--stage-sa)" },
+  fc: { badge: "FC", name: "Future Customer",      color: "var(--stage-fc)" }
+};
+
+const REASON_SHORT = {
+  "Not enough money to fund the whole project": "Not enough money",
+  "Don't have land": "No land",
+  "Lender disqualified them": "Lender DQ",
+  "Scared / don't like the monthly payment": "Scared / payment",
+  "Application doesn't match documents turned in": "App \u2260 docs",
+  "Loan expired, have to start over": "Loan expired",
+  "Didn't understand the site work": "Site work",
+  "Other": "Other"
+};
+
+const API = "https://jsonblob.com/api/jsonBlob";
+let sessionId = new URLSearchParams(location.search).get("s");
+let entries = [];
+let rendered = {};
+let pollTimer = null;
+
+function esc(s) {
+  return String(s || "").replace(/[&<>"']/g, function(c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+function formUrl() {
+  return new URL("index.html?s=" + encodeURIComponent(sessionId || ""), location.href).href;
+}
+
+async function init() {
+  if (!sessionId) {
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ v: 1, entries: [] })
+      });
+      const loc = res.headers.get("Location") || res.headers.get("location");
+      if (!loc) throw new Error("no location");
+      sessionId = loc.split("/").pop();
+      history.replaceState(null, "", "board.html?s=" + encodeURIComponent(sessionId));
+    } catch (e) {
+      document.getElementById("setupErr").classList.add("visible");
+      document.getElementById("liveDot").classList.add("stale");
+      return;
+    }
+  }
+  document.getElementById("shareUrl").textContent = formUrl();
+  document.getElementById("shareBox").style.display = "block";
+  poll();
+  pollTimer = setInterval(poll, 2500);
+}
+
+async function poll() {
+  if (!sessionId) return;
+  try {
+    const res = await fetch(API + "/" + sessionId, { headers: { "Accept": "application/json" } });
+    if (!res.ok) throw new Error("bad status");
+    const data = await res.json();
+    if (data && Array.isArray(data.entries)) {
+      mergeEntries(data.entries);
+      document.getElementById("liveDot").classList.remove("stale");
+    }
+  } catch (e) {
+    document.getElementById("liveDot").classList.add("stale");
+  }
+}
+
+function mergeEntries(incoming) {
+  let changed = false;
+  incoming.forEach(function(e) {
+    if (e && e.id && !entries.some(function(x) { return x.id === e.id; })) {
+      entries.push(e);
+      changed = true;
+    }
+  });
+  if (changed || Object.keys(rendered).length !== entries.length) render();
+}
+
+function render() {
+  entries.sort(function(a, b) { return (a.ts || 0) - (b.ts || 0); });
+
+  const grid = document.getElementById("grid");
+
+  entries.forEach(function(e) {
+    if (rendered[e.id]) return;
+    const st = STAGES[e.stage] || { badge: "?", name: e.stage || "Unknown", color: "var(--stage-fc)" };
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML =
+      '<div class="card-top">' +
+        '<div class="card-name">' + esc(e.name) + '</div>' +
+        '<div class="stage-badge">' +
+          '<div class="node-dot" style="background:' + st.color + '">' + st.badge + '</div>' +
+          '<div class="stage-name">' + esc(st.name) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-label">Deal</div>' +
+      '<div class="card-deal">' + esc(e.deal) + '</div>' +
+      '<div class="card-label">What happened at the end</div>' +
+      '<div class="card-reason">' + esc(e.reason) +
+        (e.other ? '<span class="other-note">' + esc(e.other) + '</span>' : '') +
+      '</div>';
+    grid.appendChild(card);
+    rendered[e.id] = true;
+  });
+
+  const n = entries.length;
+  document.getElementById("countText").textContent = n + (n === 1 ? " response" : " responses");
+  document.getElementById("shareBox").style.display = n === 0 ? "block" : "none";
+  renderTally();
+}
+
+function renderTally() {
+  const tally = document.getElementById("tally");
+  if (entries.length === 0) { tally.classList.remove("visible"); return; }
+
+  const byReason = {};
+  const byStage = {};
+  entries.forEach(function(e) {
+    byReason[e.reason] = (byReason[e.reason] || 0) + 1;
+    byStage[e.stage] = (byStage[e.stage] || 0) + 1;
+  });
+
+  let html = "";
+  Object.keys(byReason)
+    .sort(function(a, b) { return byReason[b] - byReason[a]; })
+    .forEach(function(r) {
+      html += '<div class="tally-chip"><div class="tc-count">' + byReason[r] + '</div>' +
+              esc(REASON_SHORT[r] || r) + '</div>';
+    });
+
+  html += '<div class="tally-divider"></div>';
+
+  Object.keys(STAGES).forEach(function(code) {
+    if (!byStage[code]) return;
+    html += '<div class="tally-chip stage-chip" style="--tc-color:' + STAGES[code].color + '">' +
+            '<div class="tc-count">' + byStage[code] + '</div>' + STAGES[code].badge + '</div>';
+  });
+
+  tally.innerHTML = html;
+  tally.classList.add("visible");
+}
+
+function copyFormLink() {
+  const url = formUrl();
+  function done(btn) {
+    const orig = btn.textContent;
+    btn.textContent = "Copied";
+    setTimeout(function() { btn.textContent = orig; }, 1400);
+  }
+  try {
+    navigator.clipboard.writeText(url).then(function() {
+      done(document.getElementById("copyMini"));
+      const big = document.getElementById("copyBig");
+      if (big) done(big);
+    });
+  } catch (e) {
+    prompt("Copy this link:", url);
+  }
+}
+
+function newSession() {
+  if (!confirm("Start a fresh session? This clears the board and creates a new form link.")) return;
+  location.href = "board.html";
+}
+
+function toggleManual() {
+  document.getElementById("manualPanel").classList.toggle("visible");
+}
+
+async function ingestCodes() {
+  const raw = document.getElementById("manualCodes").value.trim();
+  if (!raw) return;
+  const codes = raw.split(/\s+/).filter(Boolean);
+  const added = [];
+  codes.forEach(function(code) {
+    try {
+      const entry = JSON.parse(decodeURIComponent(escape(atob(code))));
+      if (entry && entry.id && entry.name) {
+        added.push(entry);
+        if (!entries.some(function(x) { return x.id === entry.id; })) entries.push(entry);
+      }
+    } catch (e) {}
+  });
+  render();
+  document.getElementById("manualCodes").value = "";
+  document.getElementById("manualPanel").classList.remove("visible");
+
+  // Best effort: persist manual adds to the shared session too
+  if (sessionId && added.length) {
+    try {
+      const res = await fetch(API + "/" + sessionId, { headers: { "Accept": "application/json" } });
+      let data = { v: 1, entries: [] };
+      if (res.ok) {
+        const parsed = await res.json();
+        if (parsed && Array.isArray(parsed.entries)) data = parsed;
+      }
+      added.forEach(function(e) {
+        if (!data.entries.some(function(x) { return x.id === e.id; })) data.entries.push(e);
+      });
+      await fetch(API + "/" + sessionId, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(data)
+      });
+    } catch (e) {}
+  }
+}
+
+init();
+</script>
+</body>
+</html>
