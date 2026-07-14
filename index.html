@@ -37,10 +37,19 @@
     overflow-x: hidden;
   }
 
-  .wrap {
-    max-width: 720px;
+  .header {
+    padding: 40px 40px 0;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 40px 24px 60px;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
   }
 
   .eyebrow {
@@ -53,7 +62,7 @@
   }
 
   h1 {
-    font-size: 32px;
+    font-size: 34px;
     font-weight: 800;
     letter-spacing: -0.5px;
     line-height: 1.1;
@@ -67,510 +76,665 @@
     width: 64px;
     background: var(--hn-red);
     border-radius: 2px;
-    margin: 14px 0 30px;
+    margin: 14px 0 20px;
   }
 
-  .field {
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .count-pill {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--hn-navy);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 7px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-close);
+    animation: pulse 1.6s ease infinite;
+  }
+
+  .live-dot.stale { background: var(--text-muted); animation: none; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  .mini-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .mini-btn:hover { background: var(--surface-hover); color: var(--text); border-color: #C6CFDD; }
+
+  /* ── SHARE BOX (shown while empty) ── */
+  .share-box {
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 0 40px;
+  }
+
+  .share-inner {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--card-radius);
-    padding: 22px 24px;
-    margin-bottom: 16px;
+    padding: 28px 32px;
     box-shadow: 0 1px 3px rgba(26,43,74,0.06);
   }
 
-  .field-label {
-    font-size: 14px;
+  .share-label {
+    font-size: 10px;
     font-weight: 700;
-    color: var(--text);
-    margin-bottom: 4px;
-    line-height: 1.4;
-  }
-
-  .field-sub {
-    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     color: var(--text-muted);
     margin-bottom: 12px;
   }
 
-  input[type="text"] {
-    width: 100%;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: var(--text);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    transition: var(--transition);
-    margin-top: 8px;
-  }
+  .share-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
-  input[type="text"]:focus {
-    outline: none;
-    border-color: var(--hn-navy);
-    background: var(--surface);
-    box-shadow: 0 0 0 3px rgba(30,78,140,0.12);
-  }
-
-  /* ── REASON OPTIONS ── */
-  .options { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
-
-  .opt {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--bg);
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 14px;
-    line-height: 1.45;
-    user-select: none;
-  }
-
-  .opt:hover { border-color: #C6CFDD; background: var(--surface-hover); }
-
-  .opt .dot {
-    flex-shrink: 0;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 2px solid var(--text-muted);
-    margin-top: 1px;
-    transition: var(--transition);
-    position: relative;
-  }
-
-  .opt.selected {
-    border-color: var(--hn-navy);
-    background: rgba(30,78,140,0.06);
-    font-weight: 600;
-  }
-
-  .opt.selected .dot {
-    border-color: var(--hn-navy);
-    background: var(--hn-navy);
-  }
-
-  .opt.selected .dot::after {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    border-radius: 50%;
-    background: #fff;
-  }
-
-  #otherWrap { display: none; margin-top: 4px; }
-  #otherWrap.visible { display: block; }
-
-  /* ── STAGE CHIPS ── */
-  .stages {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 12px;
-  }
-
-  .stage-chip {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--bg);
-    cursor: pointer;
-    transition: var(--transition);
-    user-select: none;
-  }
-
-  .stage-chip:hover { border-color: #C6CFDD; background: var(--surface-hover); }
-
-  .stage-chip .node-dot {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 10px;
-    letter-spacing: 0.3px;
-    color: #fff;
-    flex-shrink: 0;
-  }
-
-  .stage-chip .stage-name {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.2;
-  }
-
-  .stage-chip.selected {
-    border-color: var(--chip-color);
-    background: var(--surface);
-    box-shadow: 0 0 0 3px var(--chip-glow);
-  }
-
-  /* ── SUBMIT ── */
-  .submit-btn {
-    width: 100%;
-    font-family: 'DM Sans', sans-serif;
+  .share-url {
+    flex: 1;
+    min-width: 260px;
     font-size: 16px;
+    font-weight: 600;
+    color: var(--hn-navy);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    word-break: break-all;
+    cursor: text;
+    user-select: all;
+  }
+
+  .copy-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 0.3px;
     color: #fff;
     background: var(--hn-navy);
     border: none;
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 10px;
+    padding: 13px 22px;
     cursor: pointer;
     transition: var(--transition);
-    margin-top: 8px;
   }
+  .copy-btn:hover { background: var(--hn-navy-dark); }
 
-  .submit-btn:hover { background: var(--hn-navy-dark); }
-  .submit-btn:disabled { opacity: 0.55; cursor: default; }
+  .share-hint { font-size: 12.5px; color: var(--text-muted); margin-top: 12px; }
 
-  .err {
+  /* ── TALLY STRIP ── */
+  .tally {
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 0 40px;
     display: none;
-    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tally.visible { display: flex; }
+
+  .tally-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
     font-weight: 600;
-    color: var(--hn-red);
-    text-align: center;
-    margin-top: 12px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px 6px 8px;
   }
-  .err.visible { display: block; }
 
-  /* ── SUCCESS ── */
-  .success {
-    display: none;
-    text-align: center;
-    padding: 70px 20px;
-    animation: panelIn 0.3s ease;
+  .tally-chip .tc-count {
+    min-width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: var(--hn-red);
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
   }
-  .success.visible { display: block; }
+
+  .tally-chip.stage-chip .tc-count { background: var(--tc-color); }
+
+  .tally-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    margin: 0 6px;
+  }
+
+  /* ── CARD GRID ── */
+  .grid {
+    max-width: 1400px;
+    margin: 20px auto 0;
+    padding: 0 40px 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 20px 22px;
+    transition: var(--transition);
+    box-shadow: 0 1px 3px rgba(26,43,74,0.06);
+    animation: panelIn 0.35s ease;
+  }
+
+  .card:hover { border-color: #C6CFDD; background: var(--surface-hover); }
 
   @keyframes panelIn {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .success .check {
-    width: 64px;
-    height: 64px;
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .card-name {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    color: var(--hn-navy);
+  }
+
+  .stage-badge {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+  }
+
+  .stage-badge .node-dot {
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    background: var(--accent-close);
-    color: #fff;
-    font-size: 30px;
-    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 20px;
-  }
-
-  .success h2 {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--hn-navy);
-    margin-bottom: 8px;
-  }
-
-  .success p { font-size: 14px; color: var(--text-muted); }
-
-  /* ── FALLBACK CODE ── */
-  .fallback {
-    display: none;
-    margin-top: 16px;
-    background: var(--surface);
-    border: 1px solid rgba(183,31,46,0.35);
-    border-radius: var(--card-radius);
-    padding: 20px 22px;
-  }
-  .fallback.visible { display: block; }
-
-  .fallback .fb-title {
-    font-size: 13px;
     font-weight: 700;
-    color: var(--hn-red);
-    margin-bottom: 8px;
+    font-size: 9px;
+    letter-spacing: 0.3px;
+    color: #fff;
   }
 
-  .fallback p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+  .stage-badge .stage-name {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
 
-  .fallback textarea {
+  .card-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .card-deal {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .card-reason {
+    font-size: 13.5px;
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--hn-red);
+    background: rgba(183,31,46,0.06);
+    border-left: 3px solid var(--hn-red);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 12px;
+  }
+
+  .card-reason .other-note {
+    display: block;
+    color: var(--text);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  /* ── FIXED BUTTONS ── */
+  .manual-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(26,43,74,0.1);
+  }
+  .manual-btn:hover { background: var(--surface-hover); color: var(--text); }
+
+  /* ── MANUAL PANEL ── */
+  .manual-panel {
+    display: none;
+    position: fixed;
+    bottom: 70px;
+    right: 24px;
+    width: 340px;
+    max-width: calc(100vw - 48px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 18px 20px;
+    box-shadow: 0 8px 30px rgba(26,43,74,0.18);
+    z-index: 100;
+  }
+  .manual-panel.visible { display: block; }
+
+  .manual-panel .mp-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .manual-panel p { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.45; }
+
+  .manual-panel textarea {
     width: 100%;
+    height: 80px;
     font-family: monospace;
     font-size: 11px;
     color: var(--text);
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 10px;
+    padding: 8px;
     resize: none;
-    height: 64px;
   }
 
-  .copy-btn {
+  .manual-panel .mp-add {
     font-family: 'DM Sans', sans-serif;
     font-size: 12px;
     font-weight: 700;
-    color: var(--hn-navy);
-    background: var(--surface);
-    border: 1px solid var(--border);
+    color: #fff;
+    background: var(--hn-navy);
+    border: none;
     border-radius: 8px;
-    padding: 8px 14px;
+    padding: 8px 16px;
     cursor: pointer;
-    transition: var(--transition);
     margin-top: 10px;
+    transition: var(--transition);
   }
-  .copy-btn:hover { background: var(--surface-hover); border-color: #C6CFDD; }
+  .manual-panel .mp-add:hover { background: var(--hn-navy-dark); }
 
-  .no-session {
+  .setup-err {
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 0 40px;
     display: none;
-    background: var(--surface);
-    border: 1px dashed var(--border);
-    border-radius: var(--card-radius);
-    padding: 16px 20px;
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 16px;
   }
-  .no-session.visible { display: block; }
+  .setup-err.visible { display: block; }
+  .setup-err .se-inner {
+    background: var(--surface);
+    border: 1px solid rgba(183,31,46,0.35);
+    border-radius: var(--card-radius);
+    padding: 20px 24px;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .setup-err strong { color: var(--hn-red); }
 
-  @media (max-width: 500px) {
-    .wrap { padding: 28px 16px 48px; }
+  @media (max-width: 800px) {
+    .header, .share-box, .tally, .grid, .setup-err { padding-left: 20px; padding-right: 20px; }
     h1 { font-size: 26px; }
-    .stages { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <div id="formView">
-    <div class="eyebrow">Home Nation &middot; Lost Deal Debrief</div>
+<div class="header">
+  <div class="eyebrow">Home Nation &middot; Lost Deal Debrief</div>
+  <div class="header-top">
     <h1>What Happened <span>at the End?</span></h1>
-    <div class="header-rule"></div>
-
-    <div class="no-session" id="noSession">
-      This page isn't connected to a live session. You can still fill it out — you'll get a code to paste in the team chat.
-    </div>
-
-    <div class="field">
-      <div class="field-label">Name</div>
-      <input type="text" id="fName" maxlength="60" placeholder="Your name" autocomplete="name">
-    </div>
-
-    <div class="field">
-      <div class="field-label">Deal you lost that you thought you'd win.</div>
-      <input type="text" id="fDeal" maxlength="80" placeholder="Customer / deal name">
-    </div>
-
-    <div class="field">
-      <div class="field-label">What was the last thing they did or said?</div>
-      <div class="field-sub">(What happened at the end?)</div>
-      <div class="options" id="reasonOpts"></div>
-      <div id="otherWrap">
-        <input type="text" id="fOther" maxlength="140" placeholder="What happened?">
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="field-label">Which pipeline stage it was in:</div>
-      <div class="stages" id="stageChips"></div>
-    </div>
-
-    <button class="submit-btn" id="submitBtn" onclick="submitEntry()">Submit</button>
-    <div class="err" id="errMsg"></div>
-
-    <div class="fallback" id="fallback">
-      <div class="fb-title">Couldn't reach the live board</div>
-      <p>Copy this code and paste it in the team chat. Dan can add it to the board manually.</p>
-      <textarea id="fbCode" readonly onclick="this.select()"></textarea>
-      <button class="copy-btn" onclick="copyCode()">Copy code</button>
+    <div class="header-meta">
+      <div class="count-pill"><div class="live-dot" id="liveDot"></div><span id="countText">0 responses</span></div>
+      <button class="mini-btn" onclick="copyFormLink()" id="copyMini">Copy form link</button>
+      <button class="mini-btn" onclick="newSession()">New session</button>
     </div>
   </div>
+  <div class="header-rule"></div>
+</div>
 
-  <div class="success" id="successView">
-    <div class="check">&#10003;</div>
-    <h2>You're in.</h2>
-    <p>Taking you to the board&hellip;</p>
+<div class="setup-err" id="setupErr">
+  <div class="se-inner">
+    <strong>Couldn't start a live session.</strong> Plan B: have everyone open the form and submit anyway &mdash; each person gets a code to paste in the chat. Use <em>Add manually</em> (bottom right) to drop those codes onto this board.
+    <br><br>
+    <button class="mini-btn" onclick="location.reload()">Try again</button>
+    <button class="mini-btn" onclick="openFormAnyway()">Open the form</button>
   </div>
 </div>
 
-<script>
-const REASONS = [
-  "Not enough money to fund the whole project",
-  "Don't have land",
-  "Lender disqualified them",
-  "Scared / don't like the monthly payment",
-  "Application doesn't match documents turned in",
-  "Loan expired, have to start over",
-  "Didn't understand the site work",
-  "Other"
-];
+<div class="share-box" id="shareBox" style="display:none;">
+  <div class="share-inner">
+    <div class="share-label">Send the team this link</div>
+    <div class="share-row">
+      <div class="share-url" id="shareUrl"></div>
+      <button class="copy-btn" onclick="copyFormLink()" id="copyBig">Copy link</button>
+    </div>
+    <div class="share-hint">Drop it in the sales chat. Cards land here as each person submits &mdash; keep this window up and share this screen.</div>
+  </div>
+</div>
 
-const STAGES = [
-  { code: "l1", badge: "L1", name: "New Lead",              color: "var(--stage-l1)", glow: "rgba(43,94,167,0.18)" },
-  { code: "g1", badge: "G1", name: "Good Fit",              color: "var(--stage-g1)", glow: "rgba(183,31,46,0.16)" },
-  { code: "g2", badge: "G2", name: "Easy Form & Estimate",  color: "var(--stage-g2)", glow: "rgba(201,74,69,0.16)" },
-  { code: "lr", badge: "LR", name: "Lender Review",         color: "var(--stage-lr)", glow: "rgba(58,90,140,0.18)" },
-  { code: "sa", badge: "SA", name: "Signed & Closing",      color: "var(--stage-sa)", glow: "rgba(47,138,76,0.18)" },
-  { code: "fc", badge: "FC", name: "Future Customer",       color: "var(--stage-fc)", glow: "rgba(107,122,153,0.2)" }
-];
+<div class="tally" id="tally"></div>
+
+<div class="grid" id="grid"></div>
+
+<button class="manual-btn" onclick="toggleManual()">+ Add manually</button>
+
+<div class="manual-panel" id="manualPanel">
+  <div class="mp-title">Paste submission codes</div>
+  <p>If someone's submit failed, they got a code. Paste one or more (any spacing) and add them here.</p>
+  <textarea id="manualCodes" placeholder="Paste codes here"></textarea>
+  <button class="mp-add" onclick="ingestCodes()">Add to board</button>
+</div>
+
+<script>
+const STAGES = {
+  ds: { badge: "DS", name: "Discovery",       color: "#2B5EA7" },
+  he: { badge: "HE", name: "Home Estimate",   color: "#3A5A8C" },
+  ap: { badge: "AP", name: "Application",     color: "#B71F2E" },
+  do: { badge: "DO", name: "Docs",            color: "#C94A45" },
+  in: { badge: "IN", name: "Installer",       color: "#6B7A99" },
+  sa: { badge: "SA", name: "Sales Agreement", color: "#1E4E8C" },
+  so: { badge: "SO", name: "Sold",            color: "#2F8A4C" },
+  // Legacy codes from the first team's session
+  l1: { badge: "L1", name: "New Lead",             color: "#2B5EA7" },
+  g1: { badge: "G1", name: "Good Fit",             color: "#B71F2E" },
+  g2: { badge: "G2", name: "Easy Form & Estimate", color: "#C94A45" },
+  lr: { badge: "LR", name: "Lender Review",        color: "#3A5A8C" },
+  fc: { badge: "FC", name: "Future Customer",      color: "#6B7A99" }
+};
+
+const REASON_SHORT = {
+  "Not enough money to fund the whole project": "Not enough money",
+  "Don't have land": "No land",
+  "Lender disqualified them": "Lender DQ",
+  "Scared / don't like the monthly payment": "Scared / payment",
+  "Application doesn't match documents turned in": "App \u2260 docs",
+  "Loan expired, have to start over": "Loan expired",
+  "Didn't understand the site work": "Site work",
+  "Other": "Other"
+};
 
 const API = "https://jsonblob.com/api/jsonBlob";
-const params = new URLSearchParams(location.search);
-const sessionId = params.get("s");
+const STORE_KEY = "hn_ate_session";
+let sessionId = new URLSearchParams(location.search).get("s");
+let entries = [];
+let rendered = {};
 
-let selReason = null;
-let selStage = null;
-
-// Build reason options
-const optsEl = document.getElementById("reasonOpts");
-REASONS.forEach(function(r) {
-  const div = document.createElement("div");
-  div.className = "opt";
-  div.innerHTML = '<div class="dot"></div><div>' + r + '</div>';
-  div.onclick = function() {
-    selReason = r;
-    document.querySelectorAll(".opt").forEach(function(o) { o.classList.remove("selected"); });
-    div.classList.add("selected");
-    document.getElementById("otherWrap").classList.toggle("visible", r === "Other");
-    if (r === "Other") document.getElementById("fOther").focus();
-  };
-  optsEl.appendChild(div);
-});
-
-// Build stage chips
-const chipsEl = document.getElementById("stageChips");
-STAGES.forEach(function(s) {
-  const div = document.createElement("div");
-  div.className = "stage-chip";
-  div.style.setProperty("--chip-color", s.color);
-  div.style.setProperty("--chip-glow", s.glow);
-  div.innerHTML = '<div class="node-dot" style="background:' + s.color + '">' + s.badge + '</div>' +
-                  '<div class="stage-name">' + s.name + '</div>';
-  div.onclick = function() {
-    selStage = s.code;
-    document.querySelectorAll(".stage-chip").forEach(function(c) { c.classList.remove("selected"); });
-    div.classList.add("selected");
-  };
-  chipsEl.appendChild(div);
-});
-
-if (!sessionId) document.getElementById("noSession").classList.add("visible");
-
-try {
-  const savedName = localStorage.getItem("hn_name");
-  if (savedName) document.getElementById("fName").value = savedName;
-} catch (e) {}
-
-function showErr(msg) {
-  const el = document.getElementById("errMsg");
-  el.textContent = msg;
-  el.classList.add("visible");
+function esc(s) {
+  return String(s || "").replace(/[&<>"']/g, function(c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
 }
 
-function buildEntry() {
-  const name = document.getElementById("fName").value.trim();
-  const deal = document.getElementById("fDeal").value.trim();
-  const other = document.getElementById("fOther").value.trim();
-
-  if (!name) { showErr("Add your name."); return null; }
-  if (!deal) { showErr("Which deal? Add the name."); return null; }
-  if (!selReason) { showErr("Pick what happened at the end."); return null; }
-  if (selReason === "Other" && !other) { showErr("Fill in what happened."); return null; }
-  if (!selStage) { showErr("Pick the pipeline stage it was in."); return null; }
-
-  document.getElementById("errMsg").classList.remove("visible");
-  try { localStorage.setItem("hn_name", name); } catch (e) {}
-
-  return {
-    id: Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8),
-    name: name,
-    deal: deal,
-    reason: selReason,
-    other: selReason === "Other" ? other : "",
-    stage: selStage,
-    ts: Date.now()
-  };
+function formUrl() {
+  return new URL("form.html?s=" + encodeURIComponent(sessionId || ""), location.href).href;
 }
 
-function sleep(ms) { return new Promise(function(res) { setTimeout(res, ms); }); }
+function saveSession(id) {
+  try { localStorage.setItem(STORE_KEY, id); } catch (e) {}
+}
 
-async function pushEntry(entry) {
-  const url = API + "/" + sessionId;
-  for (let attempt = 0; attempt < 6; attempt++) {
+async function sessionExists(id) {
+  try {
+    const res = await fetch(API + "/" + id, { headers: { "Accept": "application/json" } });
+    return res.ok;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function createSession() {
+  const res = await fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({ v: 1, entries: [] })
+  });
+  const loc = res.headers.get("Location") || res.headers.get("location");
+  if (!loc) throw new Error("no location header");
+  return loc.split("/").pop();
+}
+
+async function init() {
+  // 1. URL param wins. 2. Resume last session from this browser. 3. Create fresh.
+  if (!sessionId) {
+    let stored = null;
+    try { stored = localStorage.getItem(STORE_KEY); } catch (e) {}
+    if (stored && await sessionExists(stored)) sessionId = stored;
+  }
+
+  if (!sessionId) {
     try {
+      sessionId = await createSession();
+    } catch (e) {
+      document.getElementById("setupErr").classList.add("visible");
+      document.getElementById("liveDot").classList.add("stale");
+      return;
+    }
+  }
+
+  saveSession(sessionId);
+  history.replaceState(null, "", "?s=" + encodeURIComponent(sessionId));
+  document.getElementById("shareUrl").textContent = formUrl();
+  document.getElementById("shareBox").style.display = "block";
+  poll();
+  setInterval(poll, 2500);
+}
+
+async function poll() {
+  if (!sessionId) return;
+  try {
+    const res = await fetch(API + "/" + sessionId, { headers: { "Accept": "application/json" } });
+    if (!res.ok) throw new Error("bad status");
+    const data = await res.json();
+    if (data && Array.isArray(data.entries)) {
+      mergeEntries(data.entries);
+      document.getElementById("liveDot").classList.remove("stale");
+    }
+  } catch (e) {
+    document.getElementById("liveDot").classList.add("stale");
+  }
+}
+
+function mergeEntries(incoming) {
+  let changed = false;
+  incoming.forEach(function(e) {
+    if (e && e.id && !entries.some(function(x) { return x.id === e.id; })) {
+      entries.push(e);
+      changed = true;
+    }
+  });
+  if (changed || Object.keys(rendered).length !== entries.length) render();
+}
+
+function render() {
+  entries.sort(function(a, b) { return (a.ts || 0) - (b.ts || 0); });
+
+  const grid = document.getElementById("grid");
+
+  entries.forEach(function(e) {
+    if (rendered[e.id]) return;
+    const st = STAGES[e.stage] || { badge: "?", name: e.stage || "Unknown", color: "var(--stage-fc)" };
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML =
+      '<div class="card-top">' +
+        '<div class="card-name">' + esc(e.name) + '</div>' +
+        '<div class="stage-badge">' +
+          '<div class="node-dot" style="background:' + st.color + '">' + st.badge + '</div>' +
+          '<div class="stage-name">' + esc(st.name) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-label">Deal</div>' +
+      '<div class="card-deal">' + esc(e.deal) + '</div>' +
+      '<div class="card-label">What happened at the end</div>' +
+      '<div class="card-reason">' + esc(e.reason) +
+        (e.other ? '<span class="other-note">' + esc(e.other) + '</span>' : '') +
+      '</div>';
+    grid.appendChild(card);
+    rendered[e.id] = true;
+  });
+
+  const n = entries.length;
+  document.getElementById("countText").textContent = n + (n === 1 ? " response" : " responses");
+  document.getElementById("shareBox").style.display = n === 0 ? "block" : "none";
+  renderTally();
+}
+
+function renderTally() {
+  const tally = document.getElementById("tally");
+  if (entries.length === 0) { tally.classList.remove("visible"); return; }
+
+  const byReason = {};
+  const byStage = {};
+  entries.forEach(function(e) {
+    byReason[e.reason] = (byReason[e.reason] || 0) + 1;
+    byStage[e.stage] = (byStage[e.stage] || 0) + 1;
+  });
+
+  let html = "";
+  Object.keys(byReason)
+    .sort(function(a, b) { return byReason[b] - byReason[a]; })
+    .forEach(function(r) {
+      html += '<div class="tally-chip"><div class="tc-count">' + byReason[r] + '</div>' +
+              esc(REASON_SHORT[r] || r) + '</div>';
+    });
+
+  html += '<div class="tally-divider"></div>';
+
+  Object.keys(STAGES).forEach(function(code) {
+    if (!byStage[code]) return;
+    html += '<div class="tally-chip stage-chip" style="--tc-color:' + STAGES[code].color + '">' +
+            '<div class="tc-count">' + byStage[code] + '</div>' + STAGES[code].badge + '</div>';
+  });
+
+  tally.innerHTML = html;
+  tally.classList.add("visible");
+}
+
+function copyFormLink() {
+  const url = formUrl();
+  function done(btn) {
+    if (!btn) return;
+    const orig = btn.textContent;
+    btn.textContent = "Copied";
+    setTimeout(function() { btn.textContent = orig; }, 1400);
+  }
+  try {
+    navigator.clipboard.writeText(url).then(function() {
+      done(document.getElementById("copyMini"));
+      done(document.getElementById("copyBig"));
+    });
+  } catch (e) {
+    prompt("Copy this link:", url);
+  }
+}
+
+function newSession() {
+  if (!confirm("Start a fresh session? This clears the board and creates a new form link.")) return;
+  try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+  location.href = location.pathname;
+}
+
+function openFormAnyway() {
+  location.href = new URL("form.html", location.href).href;
+}
+
+function toggleManual() {
+  document.getElementById("manualPanel").classList.toggle("visible");
+}
+
+async function ingestCodes() {
+  const raw = document.getElementById("manualCodes").value.trim();
+  if (!raw) return;
+  const codes = raw.split(/\s+/).filter(Boolean);
+  const added = [];
+  codes.forEach(function(code) {
+    try {
+      const entry = JSON.parse(decodeURIComponent(escape(atob(code))));
+      if (entry && entry.id && entry.name) {
+        added.push(entry);
+        if (!entries.some(function(x) { return x.id === entry.id; })) entries.push(entry);
+      }
+    } catch (e) {}
+  });
+  render();
+  document.getElementById("manualCodes").value = "";
+  document.getElementById("manualPanel").classList.remove("visible");
+
+  // Best effort: persist manual adds to the shared session too
+  if (sessionId && added.length) {
+    try {
+      const res = await fetch(API + "/" + sessionId, { headers: { "Accept": "application/json" } });
       let data = { v: 1, entries: [] };
-      const getRes = await fetch(url, { headers: { "Accept": "application/json" } });
-      if (getRes.ok) {
-        const parsed = await getRes.json();
+      if (res.ok) {
+        const parsed = await res.json();
         if (parsed && Array.isArray(parsed.entries)) data = parsed;
       }
-      if (!data.entries.some(function(e) { return e.id === entry.id; })) {
-        data.entries.push(entry);
-      }
-      await fetch(url, {
+      added.forEach(function(e) {
+        if (!data.entries.some(function(x) { return x.id === e.id; })) data.entries.push(e);
+      });
+      await fetch(API + "/" + sessionId, {
         method: "PUT",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify(data)
       });
-      await sleep(300 + Math.random() * 500);
-      const checkRes = await fetch(url, { headers: { "Accept": "application/json" } });
-      if (checkRes.ok) {
-        const check = await checkRes.json();
-        if (check && Array.isArray(check.entries) &&
-            check.entries.some(function(e) { return e.id === entry.id; })) {
-          return true;
-        }
-      }
     } catch (e) {}
-    await sleep(400 + Math.random() * 800);
-  }
-  return false;
-}
-
-async function submitEntry() {
-  const entry = buildEntry();
-  if (!entry) return;
-
-  const btn = document.getElementById("submitBtn");
-  btn.disabled = true;
-  btn.textContent = "Sending\u2026";
-
-  let ok = false;
-  if (sessionId) ok = await pushEntry(entry);
-
-  if (ok) {
-    document.getElementById("formView").style.display = "none";
-    document.getElementById("successView").classList.add("visible");
-    setTimeout(function() {
-      location.href = "board.html?s=" + encodeURIComponent(sessionId);
-    }, 1200);
-  } else {
-    // Fallback: hand them a paste code
-    const code = btoa(unescape(encodeURIComponent(JSON.stringify(entry))));
-    document.getElementById("fbCode").value = code;
-    document.getElementById("fallback").classList.add("visible");
-    btn.disabled = false;
-    btn.textContent = "Try again";
-    if (sessionId) showErr("The live board didn't respond. Use the code below or try again.");
   }
 }
 
-function copyCode() {
-  const ta = document.getElementById("fbCode");
-  ta.select();
-  try { navigator.clipboard.writeText(ta.value); } catch (e) { document.execCommand("copy"); }
-}
+init();
 </script>
 </body>
 </html>
